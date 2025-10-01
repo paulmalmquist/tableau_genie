@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workbook>
+  <version value="2021.1" />
+  <datasources>
+    <datasource name="Orders" caption="Orders">
+      <column name="[Profit]" caption="Profit" datatype="float" role="measure" />
+      <column name="[Sales]" caption="Sales" datatype="float" role="measure" />
+      <column name="[Region]" caption="Region" datatype="string" role="dimension" />
+      <column name="[Category]" caption="Category" datatype="string" role="dimension" />
+      <connection class="sqlproxy" server="localhost" dbname="sample" schema="public" table="orders" />
+      <datasource-dependencies>
+        <column ref="[Profit]" />
+      </datasource-dependencies>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="Summary">
+      <table>
+        <datasource name="Orders" />
+        <view>
+          <columns>
+            <column ref="[Profit]" />
+            <column ref="[Region]" />
+          </columns>
+        </view>
+      </table>
+      <zone id="ws1" />
+    </worksheet>
+    <worksheet name="Detail">
+      <table>
+        <datasource name="Orders" />
+        <view>
+          <columns>
+            <column ref="[Profit]" />
+          </columns>
+        </view>
+      </table>
+      <zone id="ws2" />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Executive">
+      <zones>
+        <zone id="root" type="layout" />
+        <zone id="z1" type="worksheet" worksheet="Summary" x="0" y="0" w="400" h="300" />
+      </zones>
+    </dashboard>
+  </dashboards>
+  <actions>
+    <action type="filter" name="Action1" source="Executive" target="Detail" mapping="Region=Region" />
+  </actions>
+  <parameters>
+    <parameter name="RegionParam" datatype="string" current-value="East">
+      <values>
+        <value>East</value>
+        <value>West</value>
+      </values>
+    </parameter>
+  </parameters>
+</workbook>
